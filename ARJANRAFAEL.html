@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARJAN RAFAEL</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial Black', Arial, sans-serif;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Particle background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: float 20s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .title {
+            position: fixed;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            z-index: 1000;
+            pointer-events: none;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            from { text-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 0 20px rgba(255,255,255,0.3); }
+            to { text-shadow: 0 2px 10px rgba(0,0,0,0.5), 0 0 40px rgba(255,255,255,0.8); }
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .btn-control {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-control:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .main-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .letter-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            max-width: 100%;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .letter-box {
+            width: 100px;
+            height: 120px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            flex: 0 0 auto;
+        }
+
+        .letter-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s;
+        }
+
+        .letter-box:hover::before {
+            left: 100%;
+        }
+
+        .letter-box:hover {
+            transform: translateY(-20px) scale(1.15) rotateX(10deg);
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 1);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+        }
+
+        .letter {
+            position: relative;
+            z-index: 2;
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+        }
+
+        .letter-box:hover .letter {
+            text-shadow: 0 0 30px rgba(255,255,255,1);
+            transform: scale(1.2) rotate(5deg);
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.8));
+        }
+
+        .icon {
+            font-size: 2rem;
+            margin-top: 8px;
+            opacity: 0;
+            transform: scale(0) rotate(-180deg);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            position: relative;
+            z-index: 2;
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.6));
+        }
+
+        .letter-box:hover .icon {
+            opacity: 1;
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        .letter-box.active .icon {
+            animation: iconPulse 1.2s infinite;
+        }
+
+        .letter-box.explode {
+            animation: explode 0.8s ease forwards;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(1); }
+            50% { transform: scale(2) rotate(180deg); opacity: 0.7; }
+            100% { transform: scale(0) rotate(360deg); opacity: 0; }
+        }
+
+        .letter-box.clicked {
+            animation: megaBounce 0.8s ease;
+        }
+
+        @keyframes megaBounce {
+            0% { transform: scale(1) rotate(0deg); }
+            20% { transform: scale(1.5) rotate(20deg); }
+            40% { transform: scale(0.8) rotate(-10deg); }
+            60% { transform: scale(1.3) rotate(10deg); }
+            80% { transform: scale(0.95) rotate(-5deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { 
+                box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+                border-color: rgba(255, 255, 255, 0.4);
+            }
+            50% { 
+                box-shadow: 0 0 60px rgba(255,255,255,0.9);
+                border-color: rgba(255, 255, 255, 1);
+                transform: scale(1.05);
+            }
+        }
+
+        .letter-box.pulse-glow {
+            animation: pulseGlow 1.5s infinite;
+        }
+
+        .letter-box.popped {
+            animation: popUp 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes popUp {
+            0% {
+                transform: scale(0) rotate(180deg) translateY(50px);
+                opacity: 0;
+            }
+            60% {
+                transform: scale(1.3) rotate(0deg) translateY(-20px);
+            }
+            100% {
+                transform: translateY(-10px) scale(1);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 1.4rem; top: 20px; }
+            .letter-box { width: 80px; height: 100px; font-size: 2.2rem; }
+            .letter-container { gap: 12px; padding: 15px; }
+            .controls { flex-direction: column; bottom: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .letter-box { width: 70px; height: 90px; font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="title">ARJAN RAFAEL</div>
+    
+    <div class="controls">
+        <button class="btn-control" onclick="resetAnimation()">🔄 Reset</button>
+        <button class="btn-control" onclick="explodeAll()">💥 Explode</button>
+        <button class="btn-control" onclick="toggleParticles()">⭐ Particles</button>
+        <button class="btn-control" onclick="requestFullscreen()">📱 Fullscreen</button>
+    </div>
+    
+    <div class="main-container">
+        <div class="letter-container" id="letterContainer"></div>
+    </div>
+
+    <script>
+        const name = "ARJAN RAFAEL";
+        const icons = [
+            'bi-star-fill', 'bi-heart-fill', 'bi-lightning-fill', 'bi-gem',
+            'bi-rocket-takeoff-fill', 'bi-trophy-fill', 'bi-flame', 'bi-diamond',
+            'bi-award', 'bi-crown-fill', 'bi-fire', 'bi-bullseye',
+            'bi-check-circle-fill', 'bi-patch-check-fill', 'bi-star-fill'
+        ];
+
+        const letterContainer = document.getElementById('letterContainer');
+        const particlesContainer = document.getElementById('particles');
+        let particlesEnabled = true;
+        let isAnimating = false;
+
+        // Create particles
+        function createParticles() {
+            particlesContainer.innerHTML = '';
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Create letter boxes
+        name.split('').forEach((letter, index) => {
+            if (letter !== ' ') {
+                const letterBox = document.createElement('div');
+                letterBox.className = 'letter-box';
+                letterBox.innerHTML = `
+                    <div class="letter">${letter}</div>
+                    <i class="bi ${icons[index % icons.length]} icon"></i>
+                `;
+                letterBox.dataset.index = index;
+                letterContainer.appendChild(letterBox);
+            } else {
+                const spaceBox = document.createElement('div');
+                spaceBox.style.width = '20px';
+                spaceBox.style.height = '120px';
+                spaceBox.style.flex = '0 0 20px';
+                letterContainer.appendChild(spaceBox);
+            }
+        });
+
+        const letterBoxes = document.querySelectorAll('.letter-box');
+
+        // Initial animation
+        function initAnimation() {
+            letterBoxes.forEach(box => {
+                box.classList.remove('popped', 'active', 'pulse-glow', 'clicked', 'explode');
+            });
+            
+            setTimeout(() => {
+                letterBoxes.forEach((box, index) => {
+                    setTimeout(() => {
+                        box.classList.add('popped');
+                    }, index * 120);
+                });
+            }, 300);
+        }
+
+        // Super click handler
+        document.addEventListener('click', function(e) {
+            const box = e.target.closest('.letter-box');
+            if (box && !isAnimating) {
+                letterBoxes.forEach(b => {
+                    b.classList.remove('active', 'pulse-glow');
+                });
+                
+                box.classList.add('clicked', 'active', 'pulse-glow');
+                createRippleEffect(box);
+                createParticlesBurst(box);
+            }
+        });
+
+        // Double click explode
+        document.addEventListener('dblclick', function(e) {
+            const box = e.target.closest('.letter-box');
+            if (box) {
+                box.classList.add('explode');
+                setTimeout(() => {
+                    box.classList.remove('explode');
+                    box.style.transform = 'scale(0)';
+                }, 800);
+            }
+        });
+
+        // Ripple effect
+        function createRippleEffect(element) {
+            const ripple = document.createElement('span');
+            const rect = element.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.cssText = `
+                position: absolute;
+                width: ${size}px;
+                height: ${size}px;
+                left: ${x}px;
+                top: ${y}px;
+                background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, transparent 70%);
+                border-radius: 50%;
+                transform: scale(0);
+                animation: ripple 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                pointer-events: none;
+                z-index: 3;
+            `;
+            
+            element.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 700);
+        }
+
+        // Particles burst
+        function createParticlesBurst(element) {
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                const rect = element.getBoundingClientRect();
+                particle.style.cssText = `
+                    position: fixed;
+                    width: 6px;
+                    height: 6px;
+                    background: rgba(255,255,255,0.9);
+                    border-radius: 50%;
+                    left: ${rect.left + rect.width/2}px;
+                    top: ${rect.top + rect.height/2}px;
+                    pointer-events: none;
+                    z-index: 1001;
+                    animation: burst ${Math.random()*0.5 + 0.5}s linear forwards;
+                `;
+                document.body.appendChild(particle);
+                
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        // Control functions
+        function resetAnimation() {
+            isAnimating = true;
+            letterBoxes.forEach(box => {
+                box.classList.remove('active', 'pulse-glow', 'clicked');
+                box.style.transform = 'scale(0)';
+            });
+            setTimeout(initAnimation, 200);
+            setTimeout(() => isAnimating = false, 2000);
+        }
+
+        function explodeAll() {
+            letterBoxes.forEach((box, index) => {
+                setTimeout(() => {
+                    box.classList.add('explode');
+                }, index * 100);
+            });
+        }
+
+        function toggleParticles() {
+            particlesEnabled = !particlesEnabled;
+            if (particlesEnabled) {
+                createParticles();
+            } else {
+                particlesContainer.innerHTML = '';
+            }
+        }
+
+        function requestFullscreen() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen();
+            }
+        }
+
+        // Keyboard controls
+        document.addEventListener('keydown', function(e) {
+            if (e.key >= '1' && e.key <= '9') {
+                const index = parseInt(e.key) - 1;
+                if (letterBoxes[index]) letterBoxes[index].click();
+            } else if (e.key === 'r' || e.key === 'R') {
+                resetAnimation();
+            } else if (e.key === 'e' || e.key === 'E') {
+                explodeAll();
+            }
+        });
+
+        // Init
+        createParticles();
+        initAnimation();
+
+        // Continuous floating particles
+        setInterval(() => {
+            if (particlesEnabled) createParticles();
+        }, 10000);
+
+        // Prevent scrolling
+        document.addEventListener('touchmove', e => e.preventDefault(), { passive: false });
+    </script>
+
+    <style>
+        @keyframes ripple {
+            to { transform: scale(4); opacity: 0; }
+        }
+        @keyframes burst {
+            to {
+                transform: translate(${Math.random()*200-100}px, ${Math.random()*200-100}px) rotate(720deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</body>
+</html>
